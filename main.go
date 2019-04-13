@@ -2,12 +2,19 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"time"
 )
+
+type perInfo struct {
+	status   int
+	bytes    int64
+	duration time.Duration
+}
 
 func main() {
 	request := flag.Int64("n", 1, "Number of request to perform")
@@ -21,19 +28,35 @@ func main() {
 	}
 
 	url := flag.Arg(0)
-	per(url)
 
+	result := make(chan perInfo)
+	for i := int64(0); i < *concurrency; i++ {
+		go per(url, result)
+	}
+
+	for i := int64(0); i < *concurrency; i++ {
+		res := <-result
+		log.Println(res)
+	}
 }
 
-func per(url string) {
+func per(url string, result chan perInfo) {
+	start := time.Now()
 	res, err := http.Get(url)
 
 	if err != nil {
 		panic(err)
 	}
 
-	read, _ := io.Copy(ioutil.Discard, res.Body)
+	bytes, _ := io.Copy(ioutil.Discard, res.Body)
 
-	fmt.Println(read, res.StatusCode)
+	duration := time.Now().Sub(start)
 
+	result <- perInfo{
+		bytes:    bytes,
+		status:   res.StatusCode,
+		duration: duration,
+	}
+
+	return
 }
