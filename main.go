@@ -19,27 +19,28 @@ type perInfo struct {
 func main() {
 	request := flag.Int64("n", 1, "Number of request to perform")
 	concurrency := flag.Int64("c", 1, "Number of multiple requests to make at a time")
-	timeout := flag.Int64("t", 30, "Maximum number of seconds to wait before the socket times out")
+	t := flag.Int64("t", 30, "Maximum number of seconds to wait before the socket times out")
 
 	flag.Parse()
 
 	if flag.NArg() == 0 || *request <= 0 || *concurrency <= 0 ||
 		*request < *concurrency ||
-		*timeout < 0 {
+		*t < 0 {
 		flag.PrintDefaults()
 		os.Exit(-1)
 	}
 
 	url := flag.Arg(0)
+	timeout := time.Second * time.Duration(*t)
 
 	result := make(chan perInfo)
 	for i := int64(0); i < *concurrency; i++ {
-		go per(url, result)
+		go per(url, timeout, result)
 	}
 
 	for i := int64(0); i < *request; i++ {
 		if i+*concurrency < *request {
-			go per(url, result)
+			go per(url, timeout, result)
 		}
 
 		res := <-result
@@ -47,13 +48,19 @@ func main() {
 	}
 }
 
-func per(url string, result chan perInfo) {
+func per(url string, timeout time.Duration, result chan perInfo) {
 	start := time.Now()
-	res, err := http.Get(url)
+
+	client := &http.Client{
+		Timeout: timeout,
+	}
+	res, err := client.Get(url)
 
 	if err != nil {
 		panic(err)
 	}
+
+	defer res.Body.Close()
 
 	bytes, _ := io.Copy(ioutil.Discard, res.Body)
 
