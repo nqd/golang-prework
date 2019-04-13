@@ -11,6 +11,7 @@ import (
 )
 
 type perInfo struct {
+	err      error
 	status   int
 	bytes    int64
 	duration time.Duration
@@ -56,10 +57,13 @@ func per(url string, timeout time.Duration, result chan perInfo) {
 	}
 	res, err := client.Get(url)
 
+	// maybe from the timeout
 	if err != nil {
-		panic(err)
+		result <- perInfo{
+			err: err,
+		}
+		return
 	}
-
 	defer res.Body.Close()
 
 	bytes, _ := io.Copy(ioutil.Discard, res.Body)
