@@ -5,8 +5,8 @@ GO ?= go
 
 # Build
 build:
-$(GO) build -o main main.go
+	$(GO) build -o main main.go
 
 # Test
 test:
-$(GO) test -v ./...
+	$(GO) test -v ./...

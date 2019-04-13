@@ -19,10 +19,13 @@ type perInfo struct {
 func main() {
 	request := flag.Int64("n", 1, "Number of request to perform")
 	concurrency := flag.Int64("c", 1, "Number of multiple requests to make at a time")
+	timeout := flag.Int64("t", 30, "Maximum number of seconds to wait before the socket times out")
 
 	flag.Parse()
 
-	if flag.NArg() == 0 || *request <= 0 || *concurrency <= 0 || *request < *concurrency {
+	if flag.NArg() == 0 || *request <= 0 || *concurrency <= 0 ||
+		*request < *concurrency ||
+		*timeout < 0 {
 		flag.PrintDefaults()
 		os.Exit(-1)
 	}

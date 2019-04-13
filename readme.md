@@ -14,14 +14,14 @@
   * [x] Requests - Number of requests to perform
   * [x] Concurrency - Number of multiple requests to make at a time
   * [x] URL - The URL for testing.
-* [ ] Prints use information if wrong arguments provided
-* [ ] Implements  HTTP load and summarize it
-* [ ] Concurrency must be implemented with goroutine.
+* [x] Prints use information if wrong arguments provided
+* [x] Implements  HTTP load and summarize it
+* [x] Concurrency must be implemented with goroutine.
 
 ### Bonus
 
-* [ ] Extend input params with: 
-  * [ ] Timeout - Seconds to max. wait for each response
+* [x] Extend input params with:
+  * [x] Timeout - Seconds to max. wait for each response
   * [ ] Timelimit - Maximum number of seconds to spend for benchmarking
 * [ ] Prints key metrics of summary, such:
   * [ ] Server Hostname
