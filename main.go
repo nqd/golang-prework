@@ -34,7 +34,11 @@ func main() {
 		go per(url, result)
 	}
 
-	for i := int64(0); i < *concurrency; i++ {
+	for i := int64(0); i < *request; i++ {
+		if i+*concurrency < *request {
+			go per(url, result)
+		}
+
 		res := <-result
 		log.Println(res)
 	}
@@ -57,6 +61,4 @@ func per(url string, result chan perInfo) {
 		status:   res.StatusCode,
 		duration: duration,
 	}
-
-	return
 }
