@@ -42,13 +42,21 @@ func main() {
 		go per(url, timeout, result)
 	}
 
+	benchmarkTimeout := time.After(timelimit)
+
 	for i := int64(0); i < *request; i++ {
 		if i+*concurrency < *request {
 			go per(url, timeout, result)
 		}
 
-		res := <-result
-		log.Println(res)
+		select {
+		case res := <-result:
+			log.Println(res)
+		case <-benchmarkTimeout:
+			log.Fatal("time has been run out")
+			// should exit the program, or goroutine leak
+			os.Exit(0)
+		}
 	}
 }
 

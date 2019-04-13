@@ -22,7 +22,7 @@
 
 * [x] Extend input params with:
   * [x] Timeout - Seconds to max. wait for each response
-  * [ ] Timelimit - Maximum number of seconds to spend for benchmarking
+  * [x] Timelimit - Maximum number of seconds to spend for benchmarking
 * [ ] Prints key metrics of summary, such:
   * [ ] Server Hostname
   * [ ] Server Port
@@ -37,3 +37,7 @@
   * [ ] Time per request
   * [ ] Time per request
   * [ ] Transfer rate
+
+### Test
+
+`go run main.go -n 30 -c 2 -s 10 -t 5 https://bbc.co.uk`
