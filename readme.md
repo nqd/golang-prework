@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/nqd/golang-prework.svg?branch=master)](https://travis-ci.org/nqd/golang-prework)
 
 1. **Submitted by: Nguyen Quoc Dinh**
-2. **Time spent:**
+2. **Time spent: 4**
 
 ## Set of User Stories
 
